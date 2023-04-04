@@ -1,0 +1,40 @@
+{
+  "name": "relais-pi-backend",
+  "author": "daniel@natur-kultur.eu",
+  "source": "./src/index.ts",
+  "module": "dist/module.js",
+  "targets": {
+    "module": {
+      "isLibrary": true,
+      "context": "node",
+      "engines": {
+        "browsers": "node 19.8.1"
+      }
+    }
+  },
+  "scripts": {
+    "build": "parcel build --no-source-maps && sed -i '' 's/from \"solid-js\"/from \"solid-js\\/dist\\/dev\\.js\"/g' ./dist/module.js",
+    "start": "node ./dist/module.js"
+  },
+  "alias": {
+    "solid-js": "solid-js/dist/dev.js"
+  },
+  "devDependencies": {
+    "parcel": "^2.8.2",
+    "prettier": "^2.8.1"
+  },
+  "dependencies": {
+    "@types/ws": "^8.5.3",
+    "bindings": "^1.5.0",
+    "child_process": "^1.0.2",
+    "locutus": "^2.0.16",
+    "mqtt": "^4.3.7",
+    "node-pid-controller": "^1.0.1",
+    "onoff": "^6.0.3",
+    "ping": "^0.4.2",
+    "solid-js": "^1.6.6",
+    "typescript": "^4.9.4",
+    "ws": "^8.11.0"
+  },
+  "type": "module"
+}
