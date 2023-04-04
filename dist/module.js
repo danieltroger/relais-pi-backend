@@ -138,10 +138,9 @@ async function $a6166442b4560594$export$90ed46c0f5657f4f([get_config, set_config
     const outputs = {
         garden_pump: 25,
         garage_light: 24,
-        extra_outlet_garage_table: 23,
+        living_room_2: 23,
         electric_screwdriver_charger: 22,
-        living_room_1: 27,
-        living_room_2: 17
+        living_room_1: 27
     };
     const owner = (0, $72vZL$getOwner)();
     const return_value = {
