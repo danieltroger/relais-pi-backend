@@ -1,4 +1,4 @@
-import {createRoot as $72vZL$createRoot, getOwner as $72vZL$getOwner, runWithOwner as $72vZL$runWithOwner, createEffect as $72vZL$createEffect, createSignal as $72vZL$createSignal, untrack as $72vZL$untrack, createComputed as $72vZL$createComputed, on as $72vZL$on} from "solid-js/dist/dev.js";
+import {createRoot as $72vZL$createRoot, getOwner as $72vZL$getOwner, runWithOwner as $72vZL$runWithOwner, createSignal as $72vZL$createSignal, untrack as $72vZL$untrack, createComputed as $72vZL$createComputed, on as $72vZL$on, createEffect as $72vZL$createEffect} from "solid-js/dist/dev.js";
 import {promises as $72vZL$promises} from "fs";
 import $72vZL$path from "path";
 import $72vZL$process from "process";
@@ -140,9 +140,9 @@ async function $a6166442b4560594$export$90ed46c0f5657f4f([get_config, set_config
     const outputs = {
         garden_pump: 25,
         garage_light: 24,
-        living_room_2: 23,
+        living_room_extension_cable: 23,
         electric_screwdriver_charger: 22,
-        living_room_1: 27
+        living_room_distribution_socket: 27
     };
     const owner = (0, $72vZL$getOwner)();
     const return_value = {
@@ -365,6 +365,12 @@ function $6ac2e3a48effee46$var$serialize_gpio(gpio) {
 }
 
 
+
+function $c215085ba5d2c85a$export$a2a1d3f8b8c31e48(gpio) {
+    (0, $72vZL$createEffect)(()=>gpio.outputs.garage_light[1](gpio.inputs.light_switch()));
+}
+
+
 (0, $72vZL$createRoot)($f49e5f5ee91f044f$var$main);
 async function $f49e5f5ee91f044f$var$main() {
     const owner = (0, $72vZL$getOwner)();
@@ -376,7 +382,7 @@ async function $f49e5f5ee91f044f$var$main() {
         gpio: gpio,
         owner: owner
     });
-    (0, $72vZL$createEffect)(()=>gpio.outputs.garage_light[1](gpio.inputs.light_switch()));
+    (0, $72vZL$runWithOwner)(owner, ()=>(0, $c215085ba5d2c85a$export$a2a1d3f8b8c31e48)(gpio));
 }
 
 

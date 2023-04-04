@@ -10,9 +10,9 @@ export async function init_gpio([get_config, set_config]: Signal<Config>) {
   const outputs = {
     garden_pump: 25,
     garage_light: 24,
-    living_room_2: 23,
+    living_room_extension_cable: 23,
     electric_screwdriver_charger: 22,
-    living_room_1: 27,
+    living_room_distribution_socket: 27,
   };
   const owner = getOwner()!;
   const return_value = {
