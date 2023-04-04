@@ -366,8 +366,13 @@ function $6ac2e3a48effee46$var$serialize_gpio(gpio) {
 
 
 
-function $c215085ba5d2c85a$export$a2a1d3f8b8c31e48(gpio) {
-    (0, $72vZL$createEffect)(()=>gpio.outputs.garage_light[1](gpio.inputs.light_switch()));
+function $c215085ba5d2c85a$export$a2a1d3f8b8c31e48({ inputs: { light_switch: light_switch  } , outputs: { garage_light: [, set_garage_light]  }  }) {
+    (0, $72vZL$createEffect)((0, $72vZL$on)(light_switch, ()=>{
+        // every time physical switch is toggled
+        set_garage_light((old_value)=>old_value === 1 ? 0 : 1); // toggle light
+    }, {
+        defer: true
+    }));
 }
 
 
