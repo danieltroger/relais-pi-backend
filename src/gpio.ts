@@ -8,21 +8,13 @@ import { Config } from "./config";
 export async function init_gpio([get_config, set_config]: Signal<Config>) {
   const inputs = {} as { [key: string]: number }; // remove the `as` when adding stuff here
   const outputs = {
-    garden_pump: 17,
-    garage_light: 27,
-    extra_outlet_garage_table: 22,
-    electric_screwdriver_charger: 23,
-    living_room_1: 24,
-    living_room_2: 25,
+    garden_pump: 25,
+    garage_light: 24,
+    extra_outlet_garage_table: 23,
+    electric_screwdriver_charger: 22,
+    living_room_1: 27,
+    living_room_2: 17,
   };
-  /*
-  https://pinout.xyz/pinout/pin11_gpio17#
-  https://pinout.xyz/pinout/pin13_gpio27
-  https://pinout.xyz/pinout/pin15_gpio22
-  https://pinout.xyz/pinout/pin16_gpio23
-  https://pinout.xyz/pinout/pin18_gpio24
-  https://pinout.xyz/pinout/pin22_gpio25
-   */
   const owner = getOwner()!;
   const return_value = {
     inputs: Object.fromEntries(
