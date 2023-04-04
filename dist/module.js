@@ -134,7 +134,9 @@ const $b6f2ed96127d12a5$export$78e3044358792147 = (0, $72vZL$promisify)((0, $72v
 
 
 async function $a6166442b4560594$export$90ed46c0f5657f4f([get_config, set_config]) {
-    const inputs = {}; // remove the `as` when adding stuff here
+    const inputs = {
+        light_switch: 5
+    };
     const outputs = {
         garden_pump: 25,
         garage_light: 24,
