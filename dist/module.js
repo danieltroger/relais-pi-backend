@@ -1,4 +1,4 @@
-import {createRoot as $72vZL$createRoot, getOwner as $72vZL$getOwner, runWithOwner as $72vZL$runWithOwner, createSignal as $72vZL$createSignal, untrack as $72vZL$untrack, createComputed as $72vZL$createComputed, on as $72vZL$on, createEffect as $72vZL$createEffect} from "solid-js/dist/dev.js";
+import {createRoot as $72vZL$createRoot, getOwner as $72vZL$getOwner, runWithOwner as $72vZL$runWithOwner, createEffect as $72vZL$createEffect, createSignal as $72vZL$createSignal, untrack as $72vZL$untrack, createComputed as $72vZL$createComputed, on as $72vZL$on} from "solid-js/dist/dev.js";
 import {promises as $72vZL$promises} from "fs";
 import $72vZL$path from "path";
 import $72vZL$process from "process";
@@ -376,6 +376,7 @@ async function $f49e5f5ee91f044f$var$main() {
         gpio: gpio,
         owner: owner
     });
+    (0, $72vZL$createEffect)(()=>gpio.outputs.garage_light[1](gpio.inputs.light_switch()));
 }
 
 

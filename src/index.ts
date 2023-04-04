@@ -1,4 +1,4 @@
-import { createRoot, getOwner, runWithOwner } from "solid-js";
+import { createEffect, createRoot, getOwner, runWithOwner } from "solid-js";
 import { get_config_object } from "./config";
 import { init_gpio } from "./gpio";
 import { ws_messaging } from "./ws_messaging";
@@ -18,4 +18,6 @@ async function main() {
     gpio,
     owner,
   });
+
+  createEffect(() => gpio.outputs.garage_light[1](gpio.inputs.light_switch()));
 }
