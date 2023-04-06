@@ -407,6 +407,7 @@ function $3ee66f7f204c8d5d$export$318f90fab858124c({ get_config: get_config , gp
         },
         children: (gpio_label)=>{
             const schedule = (0, $72vZL$createMemo)(()=>schedules()[gpio_label]);
+            const [, set_gpio] = gpio.outputs[gpio_label];
             (0, $72vZL$Index)({
                 get each () {
                     return schedule();
@@ -416,14 +417,14 @@ function $3ee66f7f204c8d5d$export$318f90fab858124c({ get_config: get_config , gp
                         when: (0, $72vZL$createMemo)(()=>schedule().start_time),
                         action: ()=>{
                             (0, $727cf30ea0cc9d6d$export$bef1f36f5486a6a3)(`Turning on ${gpio_label}, time is ${new Date().toISOString()} due to schedule `, (0, $72vZL$untrack)(schedule));
-                            gpio.outputs[gpio_label](0);
+                            set_gpio(0);
                         }
                     });
                     do_every({
                         when: (0, $72vZL$createMemo)(()=>schedule().end_time),
                         action: ()=>{
                             (0, $727cf30ea0cc9d6d$export$bef1f36f5486a6a3)(`Turning off ${gpio_label}, time is ${new Date().toISOString()} due to schedule `, (0, $72vZL$untrack)(schedule));
-                            gpio.outputs[gpio_label](1);
+                            set_gpio(1);
                         }
                     });
                     return undefined;
