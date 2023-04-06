@@ -13,13 +13,29 @@ export function schedules({
 }) {
   const schedules = createMemo(() => get_config().schedules);
   const day = createMemo(() => new Date().getDay());
-  const do_every = ({ when, action }: { when: Accessor<{ hour: number; minute: number }>; action: VoidFunction }) => {
+  const do_every = ({
+    when,
+    action,
+    run_now_if_after_start_and_before_this,
+  }: {
+    when: Accessor<{ hour: number; minute: number }>;
+    action: VoidFunction;
+    run_now_if_after_start_and_before_this?: Accessor<{ hour: number; minute: number }>;
+  }) => {
     createEffect(() => {
       const { hour, minute } = when();
       day(); // re-start new timer when the day changes
       const now = new Date();
       if (now.getHours() > hour || (now.getHours() === hour && now.getMinutes() > minute)) {
-        // Time has passed today, don't do anything
+        // Time has passed today, don't schedule anything
+        // But if we are after the start time and before the end time, run it now since we're in the slot
+        if (run_now_if_after_start_and_before_this) {
+          const { hour: end_hour, minute: end_minute } = run_now_if_after_start_and_before_this();
+          if (now.getHours() < end_hour || (now.getHours() === end_hour && now.getMinutes() < end_minute)) {
+            log(`Running action for ${hour}:${minute} now because it is after start time and before end time`);
+            action();
+          }
+        }
         return;
       }
       const date = new Date();
@@ -47,16 +63,18 @@ export function schedules({
           return schedule();
         },
         children: schedule => {
+          const end_time_memo = createMemo(() => schedule().end_time);
           do_every({
             when: createMemo(() => schedule().start_time),
             action: () => {
               log(`Turning on ${gpio_label}, time is ${new Date().toISOString()} due to schedule `, untrack(schedule));
               set_gpio(0);
             },
+            run_now_if_after_start_and_before_this: end_time_memo,
           });
 
           do_every({
-            when: createMemo(() => schedule().end_time),
+            when: end_time_memo,
             action: () => {
               log(`Turning off ${gpio_label}, time is ${new Date().toISOString()} due to schedule `, untrack(schedule));
               set_gpio(1);
