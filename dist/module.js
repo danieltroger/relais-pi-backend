@@ -398,7 +398,7 @@ function $3ee66f7f204c8d5d$export$318f90fab858124c({ get_config: get_config , gp
                     if (now.getHours() < end_hour || now.getHours() === end_hour && now.getMinutes() < end_minute) {
                         (0, $727cf30ea0cc9d6d$export$bef1f36f5486a6a3)(`Running action for ${hour}:${minute} now because it is after start time and before end time`);
                         action();
-                    }
+                    } else (0, $727cf30ea0cc9d6d$export$bef1f36f5486a6a3)("Has run_now_if_after_start_and_before_this but time not passed?");
                 } else (0, $727cf30ea0cc9d6d$export$bef1f36f5486a6a3)("Bailing from scheduling because time has passed today", hour, minute);
                 return;
             } else (0, $727cf30ea0cc9d6d$export$bef1f36f5486a6a3)(`Did not run into if - return statement for ${hour}:${minute}, hours now is ${now.getHours()}, minutes now is ${now.getMinutes()}`);

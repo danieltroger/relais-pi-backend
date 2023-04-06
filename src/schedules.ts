@@ -38,6 +38,8 @@ export function schedules({
           if (now.getHours() < end_hour || (now.getHours() === end_hour && now.getMinutes() < end_minute)) {
             log(`Running action for ${hour}:${minute} now because it is after start time and before end time`);
             action();
+          } else {
+            log("Has run_now_if_after_start_and_before_this but time not passed?");
           }
         } else {
           log("Bailing from scheduling because time has passed today", hour, minute);
