@@ -38,27 +38,16 @@ export function schedules({
           if (now.getHours() < end_hour || (now.getHours() === end_hour && now.getMinutes() < end_minute)) {
             log(`Running action for ${hour}:${minute} now because it is after start time and before end time`);
             action();
-          } else {
-            log(
-              `Has run_now_if_after_start_and_before_this but time not passed? schedule for ${hour}:${minute}, hours now is ${now.getHours()}, minutes now is ${now.getMinutes()}`
-            );
           }
-        } else {
-          log("Bailing from scheduling because time has passed today", hour, minute);
         }
-
         return;
-      } else {
-        log(
-          `Did not run into if - return statement for ${hour}:${minute}, hours now is ${now.getHours()}, minutes now is ${now.getMinutes()}`
-        );
       }
+
       const date = new Date();
       date.setHours(hour);
       date.setMinutes(minute);
       date.setSeconds(0);
       date.setMilliseconds(0);
-      log("Setting timer to run at", date);
       do_at({
         date,
         action,
