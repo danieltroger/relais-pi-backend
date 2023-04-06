@@ -1,4 +1,4 @@
-import {createRoot as $72vZL$createRoot, getOwner as $72vZL$getOwner, runWithOwner as $72vZL$runWithOwner, createSignal as $72vZL$createSignal, untrack as $72vZL$untrack, createComputed as $72vZL$createComputed, on as $72vZL$on, createEffect as $72vZL$createEffect} from "solid-js/dist/dev.js";
+import {createRoot as $72vZL$createRoot, getOwner as $72vZL$getOwner, runWithOwner as $72vZL$runWithOwner, ErrorBoundary as $72vZL$ErrorBoundary, createSignal as $72vZL$createSignal, untrack as $72vZL$untrack, createComputed as $72vZL$createComputed, on as $72vZL$on, createEffect as $72vZL$createEffect, createMemo as $72vZL$createMemo, For as $72vZL$For, Index as $72vZL$Index, onCleanup as $72vZL$onCleanup} from "solid-js/dist/dev.js";
 import {promises as $72vZL$promises} from "fs";
 import $72vZL$path from "path";
 import $72vZL$process from "process";
@@ -73,7 +73,8 @@ function $4378e093e1af1250$export$f241be8e610f5c77(the_function, error_message) 
 
 
 const $aa9bf34e18c341ec$var$default_config = {
-    non_reactive_gpio_state_to_persist_program_restarts: {}
+    non_reactive_gpio_state_to_persist_program_restarts: {},
+    schedules: {}
 };
 async function $aa9bf34e18c341ec$export$63203fc43b45b793(owner) {
     let config_writing_debounce;
@@ -376,6 +377,69 @@ function $c215085ba5d2c85a$export$a2a1d3f8b8c31e48({ inputs: { light_switch: lig
 }
 
 
+
+
+
+function $3ee66f7f204c8d5d$export$318f90fab858124c({ get_config: get_config , gpio: gpio  }) {
+    const schedules = (0, $72vZL$createMemo)(()=>get_config().schedules);
+    const day = (0, $72vZL$createMemo)(()=>new Date().getDay());
+    const do_every = ({ when: when , action: action  })=>{
+        (0, $72vZL$createEffect)(()=>{
+            const { hour: hour , minute: minute  } = when();
+            day(); // re-start new timer when the day changes
+            const now = new Date();
+            if (now.getHours() > hour || now.getHours() === hour && now.getMinutes() > minute) // Time has passed today, don't do anything
+            return;
+            const date = new Date();
+            date.setHours(hour);
+            date.setMinutes(minute);
+            date.setSeconds(0);
+            date.setMilliseconds(0);
+            $3ee66f7f204c8d5d$var$do_at({
+                date: date,
+                action: action
+            });
+        });
+    };
+    (0, $72vZL$For)({
+        get each () {
+            return Object.keys(schedules());
+        },
+        children: (gpio_label)=>{
+            const schedule = (0, $72vZL$createMemo)(()=>schedules()[gpio_label]);
+            (0, $72vZL$Index)({
+                get each () {
+                    return schedule();
+                },
+                children: (schedule)=>{
+                    do_every({
+                        when: (0, $72vZL$createMemo)(()=>schedule().start_time),
+                        action: ()=>{
+                            (0, $727cf30ea0cc9d6d$export$bef1f36f5486a6a3)(`Turning on ${gpio_label}, time is ${new Date().toISOString()} due to schedule `, (0, $72vZL$untrack)(schedule));
+                            gpio.outputs[gpio_label](0);
+                        }
+                    });
+                    do_every({
+                        when: (0, $72vZL$createMemo)(()=>schedule().end_time),
+                        action: ()=>{
+                            (0, $727cf30ea0cc9d6d$export$bef1f36f5486a6a3)(`Turning off ${gpio_label}, time is ${new Date().toISOString()} due to schedule `, (0, $72vZL$untrack)(schedule));
+                            gpio.outputs[gpio_label](1);
+                        }
+                    });
+                    return undefined;
+                }
+            });
+            return undefined;
+        }
+    });
+}
+function $3ee66f7f204c8d5d$var$do_at({ date: date , action: action  }) {
+    const next_run = +date - +new Date();
+    const timeout = setTimeout((0, $4378e093e1af1250$export$fe8f1dea867b3946)(action), next_run);
+    (0, $72vZL$onCleanup)(()=>clearTimeout(timeout));
+}
+
+
 (0, $72vZL$createRoot)($f49e5f5ee91f044f$var$main);
 async function $f49e5f5ee91f044f$var$main() {
     const owner = (0, $72vZL$getOwner)();
@@ -388,6 +452,19 @@ async function $f49e5f5ee91f044f$var$main() {
         owner: owner
     });
     (0, $72vZL$runWithOwner)(owner, ()=>(0, $c215085ba5d2c85a$export$a2a1d3f8b8c31e48)(gpio));
+    (0, $72vZL$runWithOwner)(owner, ()=>(0, $72vZL$ErrorBoundary)({
+            fallback: (error)=>{
+                console.error("Schedules failed", error);
+                return undefined;
+            },
+            get children () {
+                (0, $3ee66f7f204c8d5d$export$318f90fab858124c)({
+                    get_config: get_config,
+                    gpio: gpio
+                });
+                return undefined;
+            }
+        }));
 }
 
 
