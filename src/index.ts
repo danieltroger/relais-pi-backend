@@ -1,8 +1,9 @@
-import { createRoot, getOwner, runWithOwner } from "solid-js";
+import { createRoot, ErrorBoundary, getOwner, runWithOwner } from "solid-js";
 import { get_config_object } from "./config";
 import { init_gpio } from "./gpio";
 import { ws_messaging } from "./ws_messaging";
 import { light_switch } from "./light_switch";
+import { schedules } from "./schedules";
 
 createRoot(main);
 
@@ -21,4 +22,17 @@ async function main() {
   });
 
   runWithOwner(owner, () => light_switch(gpio));
+
+  runWithOwner(owner, () =>
+    ErrorBoundary({
+      fallback: error => {
+        console.error("Schedules failed", error);
+        return undefined;
+      },
+      get children() {
+        schedules({ get_config, gpio });
+        return undefined;
+      },
+    })
+  );
 }
