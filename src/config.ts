@@ -7,10 +7,23 @@ import { computed_with_owner, run_catch_log } from "./utils";
 
 export type Config = {
   non_reactive_gpio_state_to_persist_program_restarts: { [key: string]: 0 | 1 }; // We could type this properly to the GPIO outputs but that could risk trouble with recursive imports
+  schedules: {
+    [key: string]: {
+      start_time: {
+        hour: number;
+        minute: number;
+      };
+      end_time: {
+        hour: number;
+        minute: number;
+      };
+    }[];
+  };
 };
 
 const default_config: Config = {
   non_reactive_gpio_state_to_persist_program_restarts: {},
+  schedules: {},
 };
 
 export async function get_config_object(owner: Owner) {
