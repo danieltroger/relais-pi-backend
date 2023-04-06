@@ -44,6 +44,10 @@ export function schedules({
         }
 
         return;
+      } else {
+        log(
+          `Did not run into if - return statement for ${hour}:${minute}, hours now is ${now.getHours()}, minutes now is ${now.getMinutes()}`
+        );
       }
       const date = new Date();
       date.setHours(hour);

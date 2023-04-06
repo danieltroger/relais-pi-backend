@@ -401,7 +401,7 @@ function $3ee66f7f204c8d5d$export$318f90fab858124c({ get_config: get_config , gp
                     }
                 } else (0, $727cf30ea0cc9d6d$export$bef1f36f5486a6a3)("Bailing from scheduling because time has passed today", hour, minute);
                 return;
-            }
+            } else (0, $727cf30ea0cc9d6d$export$bef1f36f5486a6a3)(`Did not run into if - return statement for ${hour}:${minute}, hours now is ${now.getHours()}, minutes now is ${now.getMinutes()}`);
             const date = new Date();
             date.setHours(hour);
             date.setMinutes(minute);
