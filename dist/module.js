@@ -389,7 +389,7 @@ function $3ee66f7f204c8d5d$export$318f90fab858124c({ get_config: get_config , gp
             const minute = minute_accessor();
             day(); // re-start new timer when the day changes
             const now = new Date();
-            if (now.getHours() > hour || now.getHours() === hour && now.getMinutes() > minute) {
+            if (now.getHours() > hour || now.getHours() === hour && now.getMinutes() >= minute) {
                 // Time has passed today, don't schedule anything
                 // But if we are after the start time and before the end time, run it now since we're in the slot
                 if (run_now_if_after_start_and_before_this) {
