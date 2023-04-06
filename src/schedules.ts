@@ -29,7 +29,7 @@ export function schedules({
       const minute = minute_accessor();
       day(); // re-start new timer when the day changes
       const now = new Date();
-      if (now.getHours() >= hour || (now.getHours() === hour && now.getMinutes() >= minute)) {
+      if (now.getHours() > hour || (now.getHours() === hour && now.getMinutes() >= minute)) {
         // Time has passed today, don't schedule anything
         // But if we are after the start time and before the end time, run it now since we're in the slot
         if (run_now_if_after_start_and_before_this) {
@@ -39,7 +39,10 @@ export function schedules({
             log(`Running action for ${hour}:${minute} now because it is after start time and before end time`);
             action();
           }
+        } else {
+          log("Bailing from scheduling because time has passed today", hour, minute);
         }
+
         return;
       }
       const date = new Date();
@@ -47,6 +50,7 @@ export function schedules({
       date.setMinutes(minute);
       date.setSeconds(0);
       date.setMilliseconds(0);
+      log("Setting timer to run at", date);
       do_at({
         date,
         action,

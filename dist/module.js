@@ -389,7 +389,7 @@ function $3ee66f7f204c8d5d$export$318f90fab858124c({ get_config: get_config , gp
             const minute = minute_accessor();
             day(); // re-start new timer when the day changes
             const now = new Date();
-            if (now.getHours() >= hour || now.getHours() === hour && now.getMinutes() >= minute) {
+            if (now.getHours() > hour || now.getHours() === hour && now.getMinutes() >= minute) {
                 // Time has passed today, don't schedule anything
                 // But if we are after the start time and before the end time, run it now since we're in the slot
                 if (run_now_if_after_start_and_before_this) {
@@ -399,7 +399,7 @@ function $3ee66f7f204c8d5d$export$318f90fab858124c({ get_config: get_config , gp
                         (0, $727cf30ea0cc9d6d$export$bef1f36f5486a6a3)(`Running action for ${hour}:${minute} now because it is after start time and before end time`);
                         action();
                     }
-                }
+                } else (0, $727cf30ea0cc9d6d$export$bef1f36f5486a6a3)("Bailing from scheduling because time has passed today", hour, minute);
                 return;
             }
             const date = new Date();
@@ -407,6 +407,7 @@ function $3ee66f7f204c8d5d$export$318f90fab858124c({ get_config: get_config , gp
             date.setMinutes(minute);
             date.setSeconds(0);
             date.setMilliseconds(0);
+            (0, $727cf30ea0cc9d6d$export$bef1f36f5486a6a3)("Setting timer to run at", date);
             $3ee66f7f204c8d5d$var$do_at({
                 date: date,
                 action: action
