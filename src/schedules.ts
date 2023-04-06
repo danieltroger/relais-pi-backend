@@ -40,6 +40,7 @@ export function schedules({
     },
     children: gpio_label => {
       const schedule = createMemo(() => schedules()[gpio_label]);
+      const [, set_gpio] = gpio.outputs[gpio_label as keyof typeof gpio.outputs];
 
       Index({
         get each() {
@@ -50,7 +51,7 @@ export function schedules({
             when: createMemo(() => schedule().start_time),
             action: () => {
               log(`Turning on ${gpio_label}, time is ${new Date().toISOString()} due to schedule `, untrack(schedule));
-              gpio.outputs[gpio_label](0);
+              set_gpio(0);
             },
           });
 
@@ -58,7 +59,7 @@ export function schedules({
             when: createMemo(() => schedule().end_time),
             action: () => {
               log(`Turning off ${gpio_label}, time is ${new Date().toISOString()} due to schedule `, untrack(schedule));
-              gpio.outputs[gpio_label](1);
+              set_gpio(1);
             },
           });
           return undefined;
