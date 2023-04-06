@@ -389,7 +389,7 @@ function $3ee66f7f204c8d5d$export$318f90fab858124c({ get_config: get_config , gp
             const minute = minute_accessor();
             day(); // re-start new timer when the day changes
             const now = new Date();
-            if (now.getHours() > hour || now.getHours() === hour && now.getMinutes() >= minute) {
+            if (now.getHours() >= hour || now.getHours() === hour && now.getMinutes() >= minute) {
                 // Time has passed today, don't schedule anything
                 // But if we are after the start time and before the end time, run it now since we're in the slot
                 if (run_now_if_after_start_and_before_this) {
@@ -458,6 +458,7 @@ function $3ee66f7f204c8d5d$export$318f90fab858124c({ get_config: get_config , gp
 }
 function $3ee66f7f204c8d5d$var$do_at({ date: date , action: action  }) {
     const next_run = +date - +new Date();
+    if (next_run < 0) (0, $727cf30ea0cc9d6d$export$a3bc9b8ed74fc)(`do_at: next_run is negative: ${next_run}, this is probably a bug`);
     const timeout = setTimeout((0, $4378e093e1af1250$export$fe8f1dea867b3946)(action), next_run);
     (0, $72vZL$onCleanup)(()=>clearTimeout(timeout));
 }

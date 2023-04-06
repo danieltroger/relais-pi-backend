@@ -2,7 +2,7 @@ import { Config } from "./config";
 import { Accessor, createEffect, createMemo, For, Index, onCleanup, untrack } from "solid-js";
 import { init_gpio } from "./gpio";
 import { run_catch_log } from "./utils";
-import { log } from "./logging";
+import { error, log } from "./logging";
 
 export function schedules({
   get_config,
@@ -29,7 +29,7 @@ export function schedules({
       const minute = minute_accessor();
       day(); // re-start new timer when the day changes
       const now = new Date();
-      if (now.getHours() > hour || (now.getHours() === hour && now.getMinutes() >= minute)) {
+      if (now.getHours() >= hour || (now.getHours() === hour && now.getMinutes() >= minute)) {
         // Time has passed today, don't schedule anything
         // But if we are after the start time and before the end time, run it now since we're in the slot
         if (run_now_if_after_start_and_before_this) {
@@ -103,6 +103,9 @@ export function schedules({
 
 function do_at({ date, action }: { date: Date; action: VoidFunction }) {
   const next_run = +date - +new Date();
+  if (next_run < 0) {
+    error(`do_at: next_run is negative: ${next_run}, this is probably a bug`);
+  }
   const timeout = setTimeout(run_catch_log(action), next_run);
   onCleanup(() => clearTimeout(timeout));
 }

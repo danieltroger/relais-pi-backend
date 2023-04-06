@@ -13,7 +13,7 @@
     }
   },
   "scripts": {
-    "build": "parcel build --no-source-maps && sed -i '' 's/from \"solid-js\"/from \"solid-js\\/dist\\/dev\\.js\"/g' ./dist/module.js",
+    "build": "rm -rf .parcel-cache && parcel build --no-source-maps && sed -i '' 's/from \"solid-js\"/from \"solid-js\\/dist\\/dev\\.js\"/g' ./dist/module.js",
     "start": "node ./dist/module.js"
   },
   "alias": {
