@@ -1,5 +1,15 @@
 import { Config } from "./config";
-import { Accessor, createEffect, createMemo, For, Index, onCleanup, untrack } from "solid-js";
+import {
+  Accessor,
+  createComputed,
+  createEffect,
+  createMemo,
+  createSignal,
+  For,
+  Index,
+  onCleanup,
+  untrack,
+} from "solid-js";
 import { init_gpio } from "./gpio";
 import { run_catch_log } from "./utils";
 import { error, log } from "./logging";
@@ -102,11 +112,24 @@ export function schedules({
   });
 }
 
-function make_current_day_accessor(){
-  const [get_day, set_day] = createSignal(new Date().getDay());
+function make_current_day_accessor() {
+  const [get_day, set_day] = createSignal(new Date().getDate());
+
   createEffect(() => {
-    // TODO: here
+    get_day(); // If day changes, re-add timeout
+    const next_day = new Date();
+    next_day.setDate(next_day.getDate() + 1);
+    next_day.setHours(0);
+    next_day.setMinutes(0);
+    next_day.setSeconds(0);
+    next_day.setMilliseconds(0);
+
+    const timeout = setTimeout(() => set_day(new Date().getDate()), +next_day - +new Date());
+    onCleanup(() => clearTimeout(timeout));
   });
+
+  createComputed(() => log("Day updated", get_day()));
+
   return get_day;
 }
 
