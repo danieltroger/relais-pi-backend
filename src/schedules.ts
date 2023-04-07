@@ -12,7 +12,7 @@ export function schedules({
   gpio: Awaited<ReturnType<typeof init_gpio>>;
 }) {
   const schedules = createMemo(() => get_config().schedules);
-  const day = createMemo(() => new Date().getDay());
+  const day = make_current_day_accessor();
   const do_every = ({
     hour_accessor,
     minute_accessor,
@@ -100,6 +100,14 @@ export function schedules({
       return undefined;
     },
   });
+}
+
+function make_current_day_accessor(){
+  const [get_day, set_day] = createSignal(new Date().getDay());
+  createEffect(() => {
+    // TODO: here
+  });
+  return get_day;
 }
 
 function do_at({ date, action }: { date: Date; action: VoidFunction }) {
