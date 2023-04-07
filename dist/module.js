@@ -142,8 +142,11 @@ async function $a6166442b4560594$export$90ed46c0f5657f4f([get_config, set_config
         garden_pump: 25,
         garage_light: 24,
         living_room_extension_cable: 23,
-        electric_screwdriver_charger: 22,
-        living_room_distribution_socket: 27
+        tjockis_computer: 22,
+        living_room_distribution_socket: 27,
+        unknown_1: 17,
+        unknown_2: 26,
+        unknown_3: 16
     };
     const owner = (0, $72vZL$getOwner)();
     const return_value = {
@@ -382,7 +385,7 @@ function $c215085ba5d2c85a$export$a2a1d3f8b8c31e48({ inputs: { light_switch: lig
 
 function $3ee66f7f204c8d5d$export$318f90fab858124c({ get_config: get_config , gpio: gpio  }) {
     const schedules = (0, $72vZL$createMemo)(()=>get_config().schedules);
-    const day = (0, $72vZL$createMemo)(()=>new Date().getDay());
+    const day = $3ee66f7f204c8d5d$var$make_current_day_accessor();
     const do_every = ({ hour_accessor: hour_accessor , minute_accessor: minute_accessor , action: action , run_now_if_after_start_and_before_this: run_now_if_after_start_and_before_this  })=>{
         (0, $72vZL$createEffect)(()=>{
             const hour = hour_accessor();
@@ -455,6 +458,22 @@ function $3ee66f7f204c8d5d$export$318f90fab858124c({ get_config: get_config , gp
             return undefined;
         }
     });
+}
+function $3ee66f7f204c8d5d$var$make_current_day_accessor() {
+    const [get_day, set_day] = (0, $72vZL$createSignal)(new Date().getDate());
+    (0, $72vZL$createEffect)(()=>{
+        get_day(); // If day changes, re-add timeout
+        const next_day = new Date();
+        next_day.setDate(next_day.getDate() + 1);
+        next_day.setHours(0);
+        next_day.setMinutes(0);
+        next_day.setSeconds(0);
+        next_day.setMilliseconds(0);
+        const timeout = setTimeout(()=>set_day(new Date().getDate()), +next_day - +new Date());
+        (0, $72vZL$onCleanup)(()=>clearTimeout(timeout));
+    });
+    (0, $72vZL$createComputed)(()=>(0, $727cf30ea0cc9d6d$export$bef1f36f5486a6a3)("Day updated", get_day()));
+    return get_day;
 }
 function $3ee66f7f204c8d5d$var$do_at({ date: date , action: action  }) {
     const next_run = +date - +new Date();
