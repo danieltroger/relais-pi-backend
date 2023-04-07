@@ -27,7 +27,7 @@ async function main() {
     ErrorBoundary({
       fallback: error => {
         console.error("Schedules failed", error);
-        return undefined;
+        return [];
       },
       get children() {
         schedules({ get_config, gpio });

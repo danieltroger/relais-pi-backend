@@ -422,7 +422,12 @@ function $3ee66f7f204c8d5d$export$318f90fab858124c({ get_config: get_config , gp
         },
         children: (gpio_label)=>{
             const schedule = (0, $72vZL$createMemo)(()=>schedules()[gpio_label]);
-            const [get_gpio, set_gpio] = gpio.outputs[gpio_label];
+            const gpio_signal = gpio.outputs[gpio_label];
+            if (!gpio_signal) {
+                (0, $727cf30ea0cc9d6d$export$a3bc9b8ed74fc)(`No GPIO output found for ${gpio_label}`);
+                return;
+            }
+            const [get_gpio, set_gpio] = gpio_signal;
             (0, $72vZL$Index)({
                 get each () {
                     return schedule();
@@ -498,7 +503,7 @@ async function $f49e5f5ee91f044f$var$main() {
     (0, $72vZL$runWithOwner)(owner, ()=>(0, $72vZL$ErrorBoundary)({
             fallback: (error)=>{
                 console.error("Schedules failed", error);
-                return undefined;
+                return [];
             },
             get children () {
                 (0, $3ee66f7f204c8d5d$export$318f90fab858124c)({

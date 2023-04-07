@@ -71,7 +71,12 @@ export function schedules({
     },
     children: gpio_label => {
       const schedule = createMemo(() => schedules()[gpio_label]);
-      const [get_gpio, set_gpio] = gpio.outputs[gpio_label as keyof typeof gpio.outputs];
+      const gpio_signal = gpio.outputs[gpio_label as keyof typeof gpio.outputs];
+      if (!gpio_signal) {
+        error(`No GPIO output found for ${gpio_label}`);
+        return;
+      }
+      const [get_gpio, set_gpio] = gpio_signal;
 
       Index({
         get each() {
