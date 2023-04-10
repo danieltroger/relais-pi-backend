@@ -1,4 +1,4 @@
-import {createRoot as $72vZL$createRoot, getOwner as $72vZL$getOwner, runWithOwner as $72vZL$runWithOwner, ErrorBoundary as $72vZL$ErrorBoundary, createSignal as $72vZL$createSignal, untrack as $72vZL$untrack, createComputed as $72vZL$createComputed, on as $72vZL$on, createEffect as $72vZL$createEffect, createMemo as $72vZL$createMemo, For as $72vZL$For, Index as $72vZL$Index, onCleanup as $72vZL$onCleanup} from "solid-js/dist/dev.js";
+import {createRoot as $72vZL$createRoot, getOwner as $72vZL$getOwner, runWithOwner as $72vZL$runWithOwner, ErrorBoundary as $72vZL$ErrorBoundary, createSignal as $72vZL$createSignal, untrack as $72vZL$untrack, createComputed as $72vZL$createComputed, on as $72vZL$on, createEffect as $72vZL$createEffect, createMemo as $72vZL$createMemo, Show as $72vZL$Show, For as $72vZL$For, Index as $72vZL$Index, onCleanup as $72vZL$onCleanup} from "solid-js/dist/dev.js";
 import {promises as $72vZL$promises} from "fs";
 import $72vZL$path from "path";
 import $72vZL$process from "process";
@@ -74,7 +74,8 @@ function $4378e093e1af1250$export$f241be8e610f5c77(the_function, error_message) 
 
 const $aa9bf34e18c341ec$var$default_config = {
     non_reactive_gpio_state_to_persist_program_restarts: {},
-    schedules: {}
+    schedules: {},
+    physical_light_switch_blocked: false
 };
 async function $aa9bf34e18c341ec$export$63203fc43b45b793(owner) {
     let config_writing_debounce;
@@ -370,13 +371,22 @@ function $6ac2e3a48effee46$var$serialize_gpio(gpio) {
 
 
 
-function $c215085ba5d2c85a$export$a2a1d3f8b8c31e48({ inputs: { light_switch: light_switch  } , outputs: { garage_light: [, set_garage_light]  }  }) {
-    (0, $72vZL$createEffect)((0, $72vZL$on)(light_switch, ()=>{
-        // every time physical switch is toggled
-        set_garage_light((old_value)=>old_value === 1 ? 0 : 1); // toggle light
-    }, {
-        defer: true
-    }));
+function $c215085ba5d2c85a$export$a2a1d3f8b8c31e48({ inputs: { light_switch: light_switch  } , outputs: { garage_light: [, set_garage_light]  }  }, config) {
+    const switch_enabled = (0, $72vZL$createMemo)(()=>!config().physical_light_switch_blocked);
+    (0, $72vZL$Show)({
+        get when () {
+            return switch_enabled();
+        },
+        get children () {
+            (0, $72vZL$createEffect)((0, $72vZL$on)(light_switch, ()=>{
+                // every time physical switch is toggled
+                set_garage_light((old_value)=>old_value === 1 ? 0 : 1); // toggle light
+            }, {
+                defer: true
+            }));
+            return undefined;
+        }
+    });
 }
 
 
@@ -499,7 +509,7 @@ async function $f49e5f5ee91f044f$var$main() {
         gpio: gpio,
         owner: owner
     });
-    (0, $72vZL$runWithOwner)(owner, ()=>(0, $c215085ba5d2c85a$export$a2a1d3f8b8c31e48)(gpio));
+    (0, $72vZL$runWithOwner)(owner, ()=>(0, $c215085ba5d2c85a$export$a2a1d3f8b8c31e48)(gpio, get_config));
     (0, $72vZL$runWithOwner)(owner, ()=>(0, $72vZL$ErrorBoundary)({
             fallback: (error)=>{
                 console.error("Schedules failed", error);
