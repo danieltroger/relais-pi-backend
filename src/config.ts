@@ -19,11 +19,13 @@ export type Config = {
       };
     }[];
   };
+  physical_light_switch_blocked: boolean;
 };
 
 const default_config: Config = {
   non_reactive_gpio_state_to_persist_program_restarts: {},
   schedules: {},
+  physical_light_switch_blocked: false,
 };
 
 export async function get_config_object(owner: Owner) {

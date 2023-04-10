@@ -21,7 +21,7 @@ async function main() {
     owner,
   });
 
-  runWithOwner(owner, () => light_switch(gpio));
+  runWithOwner(owner, () => light_switch(gpio, get_config));
 
   runWithOwner(owner, () =>
     ErrorBoundary({
